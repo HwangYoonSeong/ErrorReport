@@ -1,0 +1,78 @@
+create database mysong  default character set utf8 collate utf8_general_ci;
+use mysong;
+
+create table song (
+    name varchar(50),
+    singer varchar(20),
+    number dec(6),
+    favorite int
+)default character set utf8 collate utf8_general_ci; 
+
+
+show databases; 
+describe song;
+
+set names euckr;
+
+insert into song values ("애인있어요","이은미",12345,100);
+insert into song values ("헤어지는 중입니다.","이은미",23345,100);
+insert into song values ("소주한잔","임창정",63425,80);
+insert into song values ("총맞은것처럼","백지영",42225,90);
+insert into song values ("abcde","fghj",11111,10);
+
+select * from song;
+select * from song where favorite >50 ;
+select * from song where favorite >=90 ;
+select singer from song where favorite >=90 ;
+select name,singer from song where favorite >=90 ;
+
+select distinct singer from song where favorite >50 ;
+select * from song order by name asc;
+
+delete from song where number=11111;
+
+------------------------------------------------------
+
+drop database mysong;
+
+create database mysong  default character set utf8 collate utf8_general_ci;
+use mysong;
+create table singer(
+    id int(11) not null auto_increment,
+    name varchar(50) not null,
+    debut dec(4),
+    agency varchar(30),
+
+    primary key(id),
+    index(name)
+)ENGINE=InnoDB default character set utf8 collate utf8_general_ci; 
+
+
+create table song (
+    id int(11) not null auto_increment,
+    name varchar(50) not null,
+    sid int(11) not null,
+    number dec(6),
+    favorite int,
+
+    primary key(id),
+    foreign key(sid) REFERENCES singer(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    index(favorite)
+
+)ENGINE=InnoDB default character set utf8 collate utf8_general_ci; 
+
+set names euckr;
+
+insert into singer values(null,"이은미",1992,"네오비즈");
+insert into singer values(null,"임창정",1990,"NH미디어");
+
+insert into song values (null,"애인있어요",1,12345,100);
+insert into song values (null,"소주한잔",2,63425,80);
+
+select * from singer,song where song.sid=singer.id;
+
+select song.name,singer.name as singer,number,favorite from singer,song where song.sid=singer.id;
+
+update singer set id=10 where id=1;
+select * from song;
+delete from singer where id=10;

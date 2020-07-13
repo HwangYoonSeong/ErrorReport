@@ -1,0 +1,108 @@
+drop database gundam;
+
+
+create database gundam  default character set utf8 collate utf8_general_ci;
+use gundam;
+
+create table unit (
+    id int(11) not null auto_increment,
+    name varchar(50) not null, 
+    model varchar(50),
+    primary key(id),
+    index(name)
+) default character set utf8 collate utf8_general_ci; 
+
+create table pilot (
+    id int(11) not null auto_increment,
+    name varchar(50) not null, 
+    movie varchar(100),
+    primary key(id),
+    index(name)
+) default character set utf8 collate utf8_general_ci; 
+
+create table control(
+    uid int(11) not null,
+    pid int(11) not null,
+    primary key(uid,pid)
+);
+
+set names euckr;
+  
+insert into unit values (null,"건담","RX-78-2");
+insert into unit values (null,"알렉스","RX-78 NT-1");
+insert into unit values (null,"건탱크","RX-75-4");
+insert into unit values (null,"GM","RGM-79");
+
+insert into pilot values (null, "크리스티나 멕켄지","0080 주머니 속의 전쟁");
+insert into pilot values (null, "아무로 레이","기동전사 건담");
+
+
+insert into control values (1,2);
+insert into control values (2,1);
+
+
+select * from unit,control,pilot where unit.id=control.uid and pilot.id=control.pid;
+select * from unit join control on (unit.id=control.uid) join pilot on (pilot.id=control.pid);
+
+select unit.name as "unit name",pilot.name as "pilot name", movie  from unit join control on (unit.id=control.uid) join pilot on (pilot.id=control.pid);
+
+
+
+
+
+
+
+
+create table user (
+    id int(11) not null auto_increment,
+    email varchar(50) not null, 
+    password varchar(40) not null,
+    primary key(id),
+    index(email)
+) default character set utf8 collate utf8_general_ci; 
+
+
+set names euckr;
+
+insert into user values (null,"abc@naver.com","a");
+
+alter table user add image varchar(255) default './Images/제드.png';
+
+drop table user;
+create table user (
+    id int(11) not null auto_increment,
+    email varchar(50) not null, 
+    password varchar(40) not null,
+    image mediumblob,
+    primary key(id),
+    index(email)
+) ENGINE=InnoDB default character set utf8 collate utf8_general_ci; 
+
+
+drop table review;
+create table review (
+    reviewid int(11) not null auto_increment,
+    userid int(11) not null,
+    time timestamp default current_timestamp,
+    picture mediumblob,
+    memo text default null,
+    primary key(reviewid),
+    foreign key(userid) references user(id) on delete cascade on update cascade,
+    index(time)
+) ENGINE=InnoDB default character set utf8 collate utf8_general_ci; 
+
+CREATE TABLE reply(
+    replyid INT(11) NOT NULL AUTO_INCREMENT,
+    reviewid INT(11) NOT NULL,
+    userid INT(11) NOT NULL,
+    time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    memo TEXT NOT NULL,
+    PRIMARY KEY (replyid),
+    FOREIGN KEY (reviewid) REFERENCES review(reviewid) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (userid) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    INDEX(reviewid),
+    INDEX(time)
+) ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+
+

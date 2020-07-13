@@ -1,0 +1,97 @@
+create database err_report  default character set utf8 collate utf8_general_ci;
+use err_report;
+
+create table User(
+    id varchar(11) not null,
+    pw varchar(40) not null,
+    email varchar(50) not null,
+    image mediumblob,
+    primary key(id),
+    index(email)
+)ENGINE=InnoDB default character set utf8 collate utf8_general_ci;
+
+create table admin(
+    admin_id char(11) not null,
+    admin_pw varchar(15) not null,
+    primary key(admin_id)
+)ENGINE=InnoDB default character set utf8 collate utf8_general_ci;
+
+create table Question(
+    Q_id int(11) not null auto_increment,
+    user_id varchar(11) not null,
+    Q_title char(50) not null,
+    Q_contents text default null, 
+    Q_image varchar(255),
+    time timestamp default current_timestamp,
+    primary key(Q_id),
+    index(time)
+)ENGINE=InnoDB default character set utf8 collate utf8_general_ci;
+
+
+create table Answer(
+    A_id int(11) not null auto_increment,
+    Q_id int(11) not null,
+    user_id int(11) not null,
+    A_contents text default null, 
+    time timestamp default current_timestamp,
+    primary key(A_id),
+    index(time)
+)ENGINE=InnoDB default character set utf8 collate utf8_general_ci;
+
+create table Solution(
+    Sol_id int(11) not null auto_increment,
+    user_id varchar(11) not null,
+    Sol_title char(50) not null,
+    Sol_contents text default null, 
+    Sol_image varchar(255),
+    time timestamp default current_timestamp,
+    primary key(Sol_id),
+    index(time)
+)ENGINE=InnoDB default character set utf8 collate utf8_general_ci;
+
+drop table reply;
+create table reply(
+    reply_id int(11) not null auto_increment,
+    reply_Sol_id int(11) not null,
+    user_id varchar(11) not null,
+    reply_contents text default null, 
+    time timestamp default current_timestamp,
+    primary key(reply_id),
+    index(time)
+)ENGINE=InnoDB default character set utf8 collate utf8_general_ci;
+
+//table 수정
+alter table user modify image varchar(255) default './Images/제드.png';
+
+
+//solution 조회
+select Sol_id,user_id,Sol_title,Sol_image from solution;
+
+//solution 삭제
+delete from solution where Sol_id=4;
+
+//reply 삭제
+delete from reply where reply_id=1;
+
+//question 조회
+select Q_id,user_id,Q_title,Q_contents from question;
+
+//User 확인 
+select id,email from user;
+
+//user 삭제
+delete from user where id='Zed';
+      
+//Join
+select sol.Sol_title,q.Q_title
+from solution as sol
+left join question as q
+on sol.Sol_title<>q.Q_title;
+
+
+select sol.Sol_title,q.Q_title
+from solution as sol
+right join question as q
+on sol.Sol_title=q.Q_title;
+
+
